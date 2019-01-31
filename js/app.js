@@ -5,7 +5,7 @@ var heroesArr = [
         src: "images/batman.jpg",
         logoSrc: "",
         gender: "male",
-        attributes: ["cape","mask","fists","hand combat","hitech"],
+        attributes: ["cape","mask","hand combat","hitech"],
         human: "yes",
         color: "black",
         publisher: "DC Comics"
@@ -188,7 +188,7 @@ function createGridGallery(objArr,gridArr) {
         // Dodanie do boxa klasy w zależności od licznika - licznik mówi, który to będzie element we wzorze
         galleryBox.classList.add(gridArr[gridPaternCount]);
         gridPaternCount++;
-        // Wyzerowanie licznika jeśli - osiągnął większy indeks niż ostatni element w tablicy wzoru
+        // Wyzerowanie licznika jeśli osiągnął większy indeks niż ostatni element w tablicy wzoru
         if (gridPaternCount === gridArr.length) {
             gridPaternCount = 0;
         }
@@ -201,6 +201,16 @@ function createGridGallery(objArr,gridArr) {
         galleryImg.src = objArr[i].src;
         // Zagnieżdzenie obrazu w utworzonym powyżej boxie
         galleryBox.appendChild(galleryImg);
+
+        var overlay = document.createElement("div");
+        overlay.classList.add("gallery__overlay");
+
+        var overlayBox = document.createElement("div");
+        overlayBox.classList.add("gallery__overlay-box");
+        overlayBox.innerText = objArr[i].name;
+        overlay.appendChild(overlayBox);
+
+        galleryBox.appendChild(overlay);
 
         // Dodanie całego boxa wraz z obrazem do galerii
         gallery.appendChild(galleryBox);
@@ -256,7 +266,7 @@ function getKeyValues(objArr,keyName) {
 
     }
 
-    return valArr;
+    return valArr.sort();
 }
 
 function createFilterBox(objArr,keyName,title) {
@@ -289,11 +299,24 @@ function createFilterBox(objArr,keyName,title) {
 
 function buttonOnClick(event) {
 
+    if (activeFiltersArr.length === 0) {
+
+        var activeFiltersBox = document.createElement("div");
+        activeFiltersBox.classList.add("filters__box");
+        activeFiltersBox.classList.add("filters__box--active");
+
+        var activeFiltersTitle = document.createElement("h3");
+        activeFiltersTitle.classList.add("filters__title");
+        activeFiltersTitle.innerText = "Active Filters:";
+        activeFiltersBox.appendChild(activeFiltersTitle);
+
+        filters.insertBefore(activeFiltersBox, filters.children[1]);
+    }
+
     if (this.className.indexOf("clicked") === -1) {
         this.classList.add("clicked");
         var keyName = this.dataset.key;
         var filterValue = this.innerText;
-        console.log(filterValue);
         activeFiltersArr.push(filterValue);
 
         var filteredHeroesArr = [];
@@ -322,24 +345,23 @@ function buttonOnClick(event) {
         }
 
         activeHeroesArr = filteredHeroesArr;
-        console.log(activeHeroesArr);
-
     }
+
+    var toClone = this;
+    var clonedButton = toClone.cloneNode(true);
+    var activeFiltersBoxAdding = document.querySelector(".filters__box--active");
+    activeFiltersBoxAdding.appendChild(clonedButton);
+
+    this.parentElement.removeChild(this);
 
     var actGallerySize = gallery.children.length
     var i = 0;
     while (i < actGallerySize) {
         gallery.removeChild(gallery.children[0]);
-        console.log(gallery.children);
         i++;
     }
 
     createGridGallery(activeHeroesArr,gridPaternArrOne);
-    createFilterBox(activeHeroesArr,"gender","Gender:");
-    createFilterBox(activeHeroesArr,"color","Main Color:");
-    createFilterBox(activeHeroesArr,"publisher","Publisher:");
-    createFilterBox(activeHeroesArr,"human","Is human?");
-    createFilterBox(activeHeroesArr,"attributes","Attributes:");
 
     return activeHeroesArr;
 }
