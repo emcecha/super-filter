@@ -105,7 +105,7 @@ var heroesArr = [
         src: "images/spiderman.jpg",
         logoSrc: "",
         gender: "male",
-        attributes: ["spider thread","sticky hands","strength","mask"],
+        attributes: ["spider thread","sticky hands","strength","mask","super senses"],
         human: "yes",
         color: "red",
         publisher: "Marvel"
@@ -217,6 +217,17 @@ function createGridGallery(objArr,gridArr) {
     }
 }
 
+function delateGallery() {
+
+    var actGallerySize = gallery.children.length
+    var i = 0;
+    while (i < actGallerySize) {
+        gallery.removeChild(gallery.children[0]);
+        i++;
+    }
+
+}
+
 function getRandomPolygon(polygonDepth) {
 
     var lowValuesArr = []
@@ -274,99 +285,202 @@ function createFilterBox(objArr,keyName,title) {
     getKeyValues(objArr,keyName);
 
     var filterBox = document.createElement("div");
-    filterBox.classList.add("filters__box")
+    filterBox.classList.add("filters__box");
+    filterBox.dataset.key = keyName;
 
     var filterTitle = document.createElement("h3");
-    filterTitle.classList.add("filters__title")
+    filterTitle.classList.add("filters__title");
     filterTitle.innerText = title;
     filterBox.appendChild(filterTitle);
 
-    var allButton = document.createElement("button");
-    allButton.dataset.key = "all";
-    allButton.classList.add("filters__button")
-    allButton.innerText = "all";
-    filterBox.appendChild(allButton);
-
     for (var i = 0; i < valArr.length; i++) {
-        var valueButton = document.createElement("button")
+        var valueButton = document.createElement("button");
         valueButton.dataset.key = keyName;
+        valueButton.dataset.value = valArr[i];
         valueButton.classList.add("filters__button");
+        valueButton.classList.add("active");
         valueButton.innerText = valArr[i];
         filterBox.appendChild(valueButton);
     }
     filters.appendChild(filterBox);
 }
 
-function buttonOnClick(event) {
+function updateFilterBox(objArr,keyName) {
 
-    if (activeFiltersArr.length === 0) {
+    getKeyValues(objArr,keyName);
 
-        var activeFiltersBox = document.createElement("div");
-        activeFiltersBox.classList.add("filters__box");
-        activeFiltersBox.classList.add("filters__box--active");
+    filterButtons = document.querySelectorAll("button[data-key=" + keyName +"]");
 
-        var activeFiltersTitle = document.createElement("h3");
-        activeFiltersTitle.classList.add("filters__title");
-        activeFiltersTitle.innerText = "Active Filters:";
-        activeFiltersBox.appendChild(activeFiltersTitle);
+    for (var i = 0; i < filterButtons.length; i++) {
 
-        filters.insertBefore(activeFiltersBox, filters.children[1]);
+        if (valArr.indexOf(filterButtons[i].dataset.value) === -1) {
+
+            filterButtons[i].classList.remove("active");
+            filterButtons[i].classList.add("disabled");
+
+        } else if (valArr.indexOf(filterButtons[i].dataset.value) > -1) {
+
+            if (filterButtons[i].className.indexOf("disabled") > -1) {
+                filterButtons[i].classList.remove("disabled");
+                filterButtons[i].classList.add("active");
+            }
+
+        }
+    }
+}
+
+function createFilteredHeroesArr(objArr,keyName,filterValue) {
+
+    var filteredHeroesArr = [];
+
+    if (typeof objArr[0][keyName] === "string") {
+
+        for (var i = 0; i < objArr.length; i++) {
+
+            if (objArr[i][keyName] === filterValue) {
+                filteredHeroesArr.push(objArr[i]);
+            }
+        }
     }
 
-    if (this.className.indexOf("clicked") === -1) {
+    if (typeof objArr[0][keyName] === "object") {
+
+        for (var i = 0; i < objArr.length; i++) {
+
+            for (var j = 0; j < objArr[i][keyName].length; j++) {
+
+                if (objArr[i][keyName][j] === filterValue) {
+                    filteredHeroesArr.push(objArr[i]);
+                }
+            }
+        }
+    }
+
+    return filteredHeroesArr;
+}
+
+function activeButtonOnClick(event) {
+
+    if (this.className.indexOf("active") != -1) {
+
+        if (activeFiltersArr.length === 0) {
+
+            var activeFiltersBox = document.createElement("div");
+            activeFiltersBox.classList.add("filters__box");
+            activeFiltersBox.classList.add("filters__box--active");
+
+            var activeFiltersTitle = document.createElement("h3");
+            activeFiltersTitle.classList.add("filters__title");
+            activeFiltersTitle.innerText = "Active Filters:";
+            activeFiltersBox.appendChild(activeFiltersTitle);
+
+            filters.insertBefore(activeFiltersBox, filters.children[1]);
+        }
+
+        this.classList.remove("active");
         this.classList.add("clicked");
         var keyName = this.dataset.key;
         var filterValue = this.innerText;
         activeFiltersArr.push(filterValue);
 
-        var filteredHeroesArr = [];
+        activeHeroesArr = createFilteredHeroesArr(activeHeroesArr,keyName,filterValue);
 
-        if (typeof activeHeroesArr[0][keyName] === "string") {
+        var toClone = this;
+        var clonedButton = toClone.cloneNode(true);
+        var activeFiltersBoxAdding = document.querySelector(".filters__box--active");
+        clonedButton.addEventListener("click", clickedButtonOnClick);
+        activeFiltersBoxAdding.appendChild(clonedButton);
 
-            for (var i = 0; i < activeHeroesArr.length; i++) {
+        this.parentElement.removeChild(this);
 
-                if (activeHeroesArr[i][keyName] === filterValue) {
-                    filteredHeroesArr.push(activeHeroesArr[i]);
-                }
-            }
-        }
+        delateGallery();
 
-        if (typeof activeHeroesArr[0][keyName] === "object") {
+        createGridGallery(activeHeroesArr,gridPaternArrOne);
+        updateFilterBox(activeHeroesArr,"gender");
+        updateFilterBox(activeHeroesArr,"color");
+        updateFilterBox(activeHeroesArr,"publisher");
+        updateFilterBox(activeHeroesArr,"human");
+        updateFilterBox(activeHeroesArr,"attributes");
 
-            for (var i = 0; i < activeHeroesArr.length; i++) {
+        return activeHeroesArr;
 
-                for (var j = 0; j < activeHeroesArr[i][keyName].length; j++) {
+    } else if (this.className.indexOf("disabled") != -1) {
 
-                    if (activeHeroesArr[i][keyName][j] === filterValue) {
-                        filteredHeroesArr.push(activeHeroesArr[i]);
-                    }
-                }
-            }
-        }
-
-        activeHeroesArr = filteredHeroesArr;
+        return;
     }
+
+}
+
+function clickedButtonOnClick(event) {
+
+    var filterToDelete = activeFiltersArr.indexOf(this.dataset.value);
+
+    activeFiltersArr.splice(filterToDelete,1);
 
     var toClone = this;
     var clonedButton = toClone.cloneNode(true);
-    var activeFiltersBoxAdding = document.querySelector(".filters__box--active");
-    activeFiltersBoxAdding.appendChild(clonedButton);
+    clonedButton.classList.remove("clicked");
+    clonedButton.classList.add("active");
+    clonedButton.addEventListener("click", activeButtonOnClick);
 
-    this.parentElement.removeChild(this);
+    var clonedButtonKey = clonedButton.dataset.key;
+    var boxToAddClone = filters.querySelector("div[data-key=" + clonedButtonKey + "]");
+    var keyButtonsArr = [];
 
-    var actGallerySize = gallery.children.length
-    var i = 0;
-    while (i < actGallerySize) {
-        gallery.removeChild(gallery.children[0]);
-        i++;
+    for (var i = 1; i < boxToAddClone.children.length; i++) {
+
+        keyButtonsArr.push(boxToAddClone.children[i].dataset.value);
+
     }
 
-    createGridGallery(activeHeroesArr,gridPaternArrOne);
+    keyButtonsArr.push(clonedButton.dataset.value);
+    keyButtonsArr.sort();
 
-    return activeHeroesArr;
+    var cloneIndex = keyButtonsArr.indexOf(clonedButton.dataset.value);
+
+    if (cloneIndex - 1 === keyButtonsArr.length) {
+
+        boxToAddClone.appendChild(clonedButton);
+
+    } else {
+
+        boxToAddClone.insertBefore(clonedButton, boxToAddClone.children[cloneIndex + 1]);
+
+    }
+
+    if (activeFiltersArr.length === 0) {
+
+        this.parentElement.parentElement.removeChild(this.parentElement);
+        activeHeroesArr = heroesArr;
+        delateGallery();
+        createGridGallery(heroesArr,gridPaternArrOne);
+
+    } else {
+
+        this.parentElement.removeChild(this);
+        var remainFilterButtons = document.querySelectorAll(".filters__box--active > button");
+        activeHeroesArr = heroesArr;
+
+        for (var i = 0; i < remainFilterButtons.length; i++) {
+
+            var keyName = remainFilterButtons[i].dataset.key;
+            var filterValue = remainFilterButtons[i].dataset.value;
+
+            activeHeroesArr = createFilteredHeroesArr(activeHeroesArr,keyName,filterValue);
+        }
+
+        delateGallery();
+        createGridGallery(activeHeroesArr,gridPaternArrOne);
+    }
+
+    updateFilterBox(activeHeroesArr,"gender");
+    updateFilterBox(activeHeroesArr,"color");
+    updateFilterBox(activeHeroesArr,"publisher");
+    updateFilterBox(activeHeroesArr,"human");
+    updateFilterBox(activeHeroesArr,"attributes");
 }
 
-createGridGallery(heroesArr,gridPaternArrOne)
+createGridGallery(heroesArr,gridPaternArrOne);
 createFilterBox(heroesArr,"gender","Gender:");
 createFilterBox(heroesArr,"color","Main Color:");
 createFilterBox(heroesArr,"publisher","Publisher:");
@@ -377,60 +491,5 @@ var buttons = document.querySelectorAll("button");
 
 for (var i = 0; i < buttons.length; i++) {
 
-    buttons[i].addEventListener("click", buttonOnClick);
+    buttons[i].addEventListener("click", activeButtonOnClick);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// var images = document.querySelectorAll("#gallery > img");
-// var showButton = document.getElementById("showButton");
-// var hideButton = document.getElementById("hideButton");
-// var tagInput = document.getElementById("tagInput");
-//
-// showButton.addEventListener("click", filterImages);
-// hideButton.addEventListener("click", filterImages);
-//
-// function filterImages() {
-//
-//     var tagName = tagInput.value;
-//     tagInput.value = "";
-//
-//     for (var i = 0; i < images.length; i++) {
-//         var tag = images[i].dataset.tag;
-//
-//         if (tag.indexOf(tagName) > -1) {
-//
-//             if (this.id === "showButton") {
-//                 images[i].classList.remove("invisible");
-//             }
-//
-//             if (this.id === "hideButton") {
-//                 images[i].classList.add("invisible");
-//             }
-//
-//         }
-//
-//     }
-//
-// }

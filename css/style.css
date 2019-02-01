@@ -157,7 +157,7 @@ button {
     outline: none;
 }
 
-.filters__button:hover {
+.filters__button.active:hover {
     background-color: #ffb400;
     color: red;
 }
@@ -171,6 +171,12 @@ button {
 .clicked {
     background-color: #ffb400;
     color: red;
+}
+
+.disabled {
+    background-color: #514a4f;
+    color: #201e20;
+    cursor: not-allowed;
 }
 
 
