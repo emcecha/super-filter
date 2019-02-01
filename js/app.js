@@ -368,6 +368,7 @@ function activeButtonOnClick(event) {
             var activeFiltersBox = document.createElement("div");
             activeFiltersBox.classList.add("filters__box");
             activeFiltersBox.classList.add("filters__box--active");
+            activeFiltersBox.style.clipPath = getRandomPolygon(polygonDepth);
 
             var activeFiltersTitle = document.createElement("h3");
             activeFiltersTitle.classList.add("filters__title");

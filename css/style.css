@@ -132,16 +132,18 @@ button {
 }
 
 .filters {
-    margin: 1vw;
-    color: white
+    color: white;
+    margin-right: 1vw;
 }
 
-.filters__header {
-    border-bottom: solid 2px white;
-}
-
+.filters__header,
 .filters__box {
-    margin: 2vh 2vw 2vh 0;
+    padding: 1vh 2vw;
+}
+
+.filters__box--active {
+    background-color: white;
+    color: black;
 }
 
 .filters__button {
@@ -171,6 +173,12 @@ button {
 .clicked {
     background-color: #ffb400;
     color: red;
+    border-color: white;
+}
+
+.clicked:hover {
+    background-color: red;
+    color: #ffb400;
 }
 
 .disabled {
@@ -178,9 +186,3 @@ button {
     color: #201e20;
     cursor: not-allowed;
 }
-
-
-
-/* .invisible {
-    display: none;
-} */
