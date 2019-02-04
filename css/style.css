@@ -186,3 +186,64 @@ button {
     color: #201e20;
     cursor: not-allowed;
 }
+
+.shadowbox {
+    position: fixed;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.9);
+    font-size: 0;
+}
+
+.lightbox {
+    width: 65%;
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%,-50%);
+    background-color: white;
+}
+
+.lightbox-img {
+    width: 100%;
+}
+
+.lightbox-border {
+    position: absolute;
+    right: -15%;
+    top: 0;
+    width: 30%;
+    height: 100%;
+    background-color: white;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 5% 100%);
+}
+
+.lightbox-info {
+    position: relative;
+    left: 0.7vw;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 5% 100%);
+    background-image: url("../images/comic_patern1.jpg");
+    background-position: center;
+    font-size: initial;
+    padding: 5% 5% 5% 8%;
+    color: black;
+    line-height: 1.4;
+}
+
+.lightbox-header {
+    margin-bottom: 1vw;
+    font-size: 1.8vw;
+}
+
+.lightbox-filter {
+    font-size: 1.2vw;
+}
+
+.lightbox-text {
+    margin-bottom: 1vw;
+    font-size: 1vw;
+}

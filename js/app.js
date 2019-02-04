@@ -3,7 +3,7 @@ var heroesArr = [
     {
         name: "Batman",
         src: "images/batman.jpg",
-        logoSrc: "",
+        logoSrc: "images/batman_logo.jpg",
         gender: "male",
         attributes: ["cape","mask","hand combat","hitech"],
         human: "yes",
@@ -168,6 +168,7 @@ var heroesArr = [
 var gridPaternArrOne = ["gallery__box--wide","gallery__box--small","gallery__box--tall","gallery__box--tall","gallery__box--big","gallery__box--small"];
 var gallery = document.querySelector(".gallery");
 var filters = document.querySelector(".filters");
+var body = document.querySelector("body");
 var polygonDepth = 5;
 var valArr = [];
 var activeFiltersArr = [];
@@ -185,6 +186,7 @@ function createGridGallery(objArr,gridArr) {
         // Stworzenie nowego diva, który będzie boxem dla obrazu
         var galleryBox = document.createElement("div");
         galleryBox.classList.add("gallery__box");
+        galleryBox.dataset.index = i;
         // Dodanie do boxa klasy w zależności od licznika - licznik mówi, który to będzie element we wzorze
         galleryBox.classList.add(gridArr[gridPaternCount]);
         gridPaternCount++;
@@ -243,6 +245,71 @@ function getRandomPolygon(polygonDepth) {
     var randomPolygon = "polygon(" + lowValuesArr[0] + "% " + lowValuesArr[1] + "%, " + highValuesArr[0] + "% " + lowValuesArr[2] + "%, " + highValuesArr[1] + "% " + highValuesArr[2] + "%, " + lowValuesArr[3] + "% " + highValuesArr[3] + "%)";
 
     return randomPolygon;
+}
+
+function addEventOnGalleryBoxes() {
+    for (var i = 0; i < gallery.children.length; i++) {
+
+        gallery.children[i].addEventListener("click", function () {
+
+            var heroIndex = this.dataset.index;
+
+            var shadowBox = document.createElement("div");
+            shadowBox.classList.add("shadowbox");
+            body.appendChild(shadowBox);
+
+            var lightBox = document.createElement("div");
+            lightBox.classList.add("lightbox");
+            shadowBox.appendChild(lightBox);
+
+            var lightBoxImg = document.createElement("img");
+            var imgSrc = activeHeroesArr[heroIndex].src;
+            lightBoxImg.src = imgSrc;
+            lightBoxImg.classList.add("lightbox-img");
+            lightBox.appendChild(lightBoxImg);
+
+            var lightBoxBorder = document.createElement("div");
+            lightBoxBorder.classList.add("lightbox-border");
+            lightBox.appendChild(lightBoxBorder);
+
+            var lightBoxInfo = document.createElement("div");
+            lightBoxInfo.classList.add("lightbox-info");
+            lightBoxBorder.appendChild(lightBoxInfo);
+
+            var lightBoxHeader = document.createElement("h2");
+            lightBoxHeader.classList.add("lightbox-header");
+            var heroName = activeHeroesArr[heroIndex].name;
+            lightBoxHeader.innerText = heroName;
+            lightBoxInfo.appendChild(lightBoxHeader);
+
+            createLightBoxInfoElement(lightBoxInfo,heroIndex,"gender","Gender:");
+            createLightBoxInfoElement(lightBoxInfo,heroIndex,"color","Main Color:");
+            createLightBoxInfoElement(lightBoxInfo,heroIndex,"publisher","Publisher:");
+            createLightBoxInfoElement(lightBoxInfo,heroIndex,"human","Is Human?");
+            createLightBoxInfoElement(lightBoxInfo,heroIndex,"attributes","Attributes:");
+        });
+    }
+}
+
+function createLightBoxInfoElement(box,heroIndex,keyName,title) {
+
+    var lightBoxFilter = document.createElement("h3");
+    lightBoxFilter.classList.add("lightbox-filter");
+    lightBoxFilter.innerText = title;
+    box.appendChild(lightBoxFilter);
+
+    var lightBoxText = document.createElement("p");
+    lightBoxText.classList.add("lightbox-text");
+
+    if (typeof activeHeroesArr[heroIndex][keyName] === "string") {
+        lightBoxText.innerText = activeHeroesArr[heroIndex][keyName];
+    }
+
+    if (typeof activeHeroesArr[heroIndex][keyName] === "object") {
+        lightBoxText.innerText = activeHeroesArr[heroIndex][keyName].join(", ");
+    }
+
+    box.appendChild(lightBoxText);
 }
 
 function getKeyValues(objArr,keyName) {
@@ -395,8 +462,8 @@ function activeButtonOnClick(event) {
         this.parentElement.removeChild(this);
 
         delateGallery();
-
         createGridGallery(activeHeroesArr,gridPaternArrOne);
+        addEventOnGalleryBoxes();
         updateFilterBox(activeHeroesArr,"gender");
         updateFilterBox(activeHeroesArr,"color");
         updateFilterBox(activeHeroesArr,"publisher");
@@ -455,6 +522,7 @@ function clickedButtonOnClick(event) {
         activeHeroesArr = heroesArr;
         delateGallery();
         createGridGallery(heroesArr,gridPaternArrOne);
+        addEventOnGalleryBoxes();
 
     } else {
 
@@ -472,6 +540,7 @@ function clickedButtonOnClick(event) {
 
         delateGallery();
         createGridGallery(activeHeroesArr,gridPaternArrOne);
+        addEventOnGalleryBoxes();
     }
 
     updateFilterBox(activeHeroesArr,"gender");
@@ -491,6 +560,7 @@ createFilterBox(heroesArr,"attributes","Attributes:");
 var buttons = document.querySelectorAll("button");
 
 for (var i = 0; i < buttons.length; i++) {
-
     buttons[i].addEventListener("click", activeButtonOnClick);
 }
+
+addEventOnGalleryBoxes();
