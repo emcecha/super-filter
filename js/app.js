@@ -297,6 +297,7 @@ function addEventOnGalleryBoxes() {
 }
 
 function closeLightbox(event) {
+    
     var toDelete = this.parentElement.parentElement;
     body.removeChild(toDelete);
 }
