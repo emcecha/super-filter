@@ -3,7 +3,7 @@ var heroesArr = [
     {
         name: "Batman",
         src: "images/batman.jpg",
-        logoSrc: "images/batman_logo.jpg",
+        logoSrc: "images/batman_logo.png",
         gender: "male",
         attributes: ["cape","mask","hand combat","hitech"],
         human: "yes",
@@ -13,7 +13,7 @@ var heroesArr = [
     {
         name: "Captain America",
         src: "images/cap_america.jpg",
-        logoSrc: "",
+        logoSrc: "images/cap_america_logo.png",
         gender: "male",
         attributes: ["strength","shield","mask","hand combat"],
         human: "yes",
@@ -23,7 +23,7 @@ var heroesArr = [
     {
         name: "Daredevil",
         src: "images/daredevil.jpg",
-        logoSrc: "",
+        logoSrc: "images/daredevil_logo.jpg",
         gender: "male",
         attributes: ["super senses","blindness","cane"],
         human: "yes",
@@ -33,7 +33,7 @@ var heroesArr = [
     {
         name: "Elektra",
         src: "images/elektra.jpg",
-        logoSrc: "",
+        logoSrc: "images/elektra_logo.png",
         gender: "female",
         attributes: ["sword","hand combat"],
         human: "yes",
@@ -43,7 +43,7 @@ var heroesArr = [
     {
         name: "Flash",
         src: "images/flash.jpg",
-        logoSrc: "",
+        logoSrc: "images/flash_logo.png",
         gender: "male",
         attributes: ["speed","mask","wings"],
         human: "yes",
@@ -53,7 +53,7 @@ var heroesArr = [
     {
         name: "Green Arrow",
         src: "images/green_arrow.jpg",
-        logoSrc: "",
+        logoSrc: "images/green_arrow_logo.png",
         gender: "male",
         attributes: ["bow","mask"],
         human: "yes",
@@ -63,7 +63,7 @@ var heroesArr = [
     {
         name: "Green Lantern",
         src: "images/green_lantern.jpg",
-        logoSrc: "",
+        logoSrc: "images/green_lantern_logo.png",
         gender: "male",
         attributes: ["ring","mask","hand combat"],
         human: "yes",
@@ -73,7 +73,7 @@ var heroesArr = [
     {
         name: "Hellboy",
         src: "images/hellboy.jpg",
-        logoSrc: "",
+        logoSrc: "images/hellboy_logo.jpg",
         gender: "male",
         attributes: ["cloak","tail","gun","big fist"],
         human: "no",
@@ -83,7 +83,7 @@ var heroesArr = [
     {
         name: "Incredible Hulk",
         src: "images/hulk.jpg",
-        logoSrc: "",
+        logoSrc: "images/hulk_logo.png",
         gender: "male",
         attributes: ["strength","big fist","hand combat"],
         human: "yes",
@@ -93,7 +93,7 @@ var heroesArr = [
     {
         name: "Iron Man",
         src: "images/iron_man.jpg",
-        logoSrc: "",
+        logoSrc: "images/iron_man_logo.jpg",
         gender: "male",
         attributes: ["hitech","rockets","mask"],
         human: "yes",
@@ -103,7 +103,7 @@ var heroesArr = [
     {
         name: "Spiderman",
         src: "images/spiderman.jpg",
-        logoSrc: "",
+        logoSrc: "images/spiderman_logo.png",
         gender: "male",
         attributes: ["spider thread","sticky hands","strength","mask","super senses"],
         human: "yes",
@@ -113,7 +113,7 @@ var heroesArr = [
     {
         name: "Supergirl",
         src: "images/super_girl.jpg",
-        logoSrc: "",
+        logoSrc: "images/supergirl_logo.png",
         gender: "female",
         attributes: ["strength","flying","cape"],
         human: "no",
@@ -123,7 +123,7 @@ var heroesArr = [
     {
         name: "Superman",
         src: "images/superman.jpg",
-        logoSrc: "",
+        logoSrc: "images/superman_logo.png",
         gender: "male",
         attributes: ["strength","flying","cape"],
         human: "no",
@@ -133,7 +133,7 @@ var heroesArr = [
     {
         name: "Thor",
         src: "images/thor.jpg",
-        logoSrc: "",
+        logoSrc: "images/thor_logo.png",
         gender: "male",
         attributes: ["strength","hammer","cape","wings"],
         human: "no",
@@ -143,7 +143,7 @@ var heroesArr = [
     {
         name: "Wolverine",
         src: "images/wolverine.jpg",
-        logoSrc: "",
+        logoSrc: "images/wolverine_logo.png",
         gender: "male",
         attributes: ["mask","claws","strength"],
         human: "no",
@@ -153,7 +153,7 @@ var heroesArr = [
     {
         name: "Wonder Woman",
         src: "images/wonder_woman.jpg",
-        logoSrc: "",
+        logoSrc: "images/wonder_woman_logo.png",
         gender: "female",
         attributes: ["lasso","sword","strength","shield"],
         human: "no",
@@ -268,6 +268,11 @@ function addEventOnGalleryBoxes() {
             lightBoxImg.classList.add("lightbox-img");
             lightBox.appendChild(lightBoxImg);
 
+            var closeButton = document.createElement("div");
+            closeButton.classList.add("lightbox-close");
+            closeButton.addEventListener("click", closeLightbox)
+            lightBox.appendChild(closeButton);
+
             var lightBoxBorder = document.createElement("div");
             lightBoxBorder.classList.add("lightbox-border");
             lightBox.appendChild(lightBoxBorder);
@@ -289,6 +294,11 @@ function addEventOnGalleryBoxes() {
             createLightBoxInfoElement(lightBoxInfo,heroIndex,"attributes","Attributes:");
         });
     }
+}
+
+function closeLightbox(event) {
+    var toDelete = this.parentElement.parentElement;
+    body.removeChild(toDelete);
 }
 
 function createLightBoxInfoElement(box,heroIndex,keyName,title) {

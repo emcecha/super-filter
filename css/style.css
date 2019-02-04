@@ -161,7 +161,7 @@ button {
 
 .filters__button.active:hover {
     background-color: #ffb400;
-    color: red;
+    color: #fd0002;
 }
 
 .footer {
@@ -172,12 +172,12 @@ button {
 
 .clicked {
     background-color: #ffb400;
-    color: red;
+    color: #fd0002;
     border-color: white;
 }
 
 .clicked:hover {
-    background-color: red;
+    background-color: #fd0002;
     color: #ffb400;
 }
 
@@ -202,11 +202,30 @@ button {
     top: 50%;
     left: 45%;
     transform: translate(-50%,-50%);
-    background-color: white;
 }
 
 .lightbox-img {
     width: 100%;
+}
+
+.lightbox-close {
+    position: absolute;
+    width: 2vw;
+    height: 2vw;
+    top: -0.7vw;
+    right: -16%;
+    background-color: white;
+    background-image: url("../images/close.png");
+    background-size: 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 999;
+    transition: background-color 250ms;
+    cursor: pointer;
+}
+
+.lightbox-close:hover {
+    background-color: #fd0002;
 }
 
 .lightbox-border {
@@ -237,6 +256,9 @@ button {
 .lightbox-header {
     margin-bottom: 1vw;
     font-size: 1.8vw;
+    color: #741e65;
+    font-size: 1.8vw;
+    text-shadow: -0.15vw 0.15vw white;
 }
 
 .lightbox-filter {
